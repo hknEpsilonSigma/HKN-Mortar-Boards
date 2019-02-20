@@ -21,3 +21,16 @@ Next Time:
 Try to make the radios communicate with each other using UART
 Max can bring his XMEGA from uP to test UART on radios (more familiar than MSP430 for now)
 Get Juan to setup Github and install XCTU
+
+
+2/19/19
+Max, Juan
+Max talked to Juan about project overview
+Max looked into RF module configuration
+We need to determine necessary initialization for UART communication
+Juan researched power approximate power consumption and battery requirements.
+
+Next Time:
+Build breadboard for RF
+Find necessary configurations
+
