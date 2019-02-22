@@ -43,3 +43,17 @@ Explored XCTU
 Next time:
 Inventory all hardware
 Configure a mesh network
+
+2/22/2019
+Colin, Richard
+Configured the Xbees for digimesh
+Got 2-way communication to work (sent packets)
+Thought we bricked a radio when updating the magic firmware, but the board started working magically again
+Looked into the possibility of using Micropython to code the Xbee
+
+Next time:
+Learn about the digimesh network protocol
+Find out about the different device rolls
+Figure out how to send packets without using the computer
+Maybe figure out the Mircopython?
+Attempt to connect a 3rd radio
