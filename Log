@@ -66,3 +66,12 @@ Can use this to configure and write commands with UART on the micro controller
 Next time:
 Configure UART on the MSP430
 Attempt to use UART to communicate with the Xbee
+
+2/26/2019
+Max, Juan
+Max unsuccessfully attempted to have two Zigbees communicate with each other over uart through a microcontroller
+Juan researched how to configure uart on the MSP 430
+
+Next time:
+Configure zigbee uart
+Finish MSP430 uart config
