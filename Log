@@ -75,3 +75,12 @@ Juan researched how to configure uart on the MSP 430
 Next time:
 Configure zigbee uart
 Finish MSP430 uart config
+
+2/27/2018
+Juan, Richard
+Unsuccessfully attempted to configure USART Rx interrupt on the MSP430.
+Corrected some MSP430 documentation on github.
+
+Next time:
+Double check MSP430 configuration. Get interrupt working.
+Start communicating MSP430 with RF module.
