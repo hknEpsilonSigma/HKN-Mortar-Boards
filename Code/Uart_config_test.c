@@ -2,25 +2,27 @@
 #include <eusci_a_uart.h>
 
 
-/**
- * main.c
- */
-
-#define Aclk = 32768;//Need to double check this value
-#define Baudrate = 9600;
-
-uint16_t UartPrescale = 3; //(Aclk/Baudrate);
-
-struct EUSCI_A_UART_initParam RFUartSettings = {
+static EUSCI_A_UART_initParam RFUartSettings = {
 
     //Set ACLK clocksource
-    EUSCI_A_UART_CLOCKSOURCE_ACLK,
-    //Prescale value Aclk/Baudrate
-    3,
+    EUSCI_A_UART_CLOCKSOURCE_SMCLK,
+
+    /*
+    // Baud Rate calculation
+    // 8000000/(16*9600) = 52.083
+    // Fractional portion = 0.083
+    // User's Guide Table 21-4: UCBRSx = 0x04
+    // UCBRFx = int ( (52.083-52)*16) = 1
+    UCA3BRW = 52;                           // 8000000/16/9600
+    UCA3MCTLW |= UCOS16 | UCBRF_1 | 0x4900;
+    */
+
+    //Prescale value smclk/Baudrate
+    52,
     //BRF value <- Not sure about this
-    0x09,
+    0x01,
     //BRS value <- Not sure about this
-    0x08,
+    0x49,
     //No Parity
     EUSCI_A_UART_NO_PARITY,
     //LSB first
@@ -35,40 +37,59 @@ struct EUSCI_A_UART_initParam RFUartSettings = {
 };
 
 
-struct EUSCI_A_UART_initParam *RFUart = &RFUartSettings;
-
-
 int main(void)
 {
-	
-    EUSCI_A_UART_init( UCA3CTLW0, RFUart);
+
+    WDTCTL = WDTPW | WDTHOLD;               // Stop Watchdog
+
+    // Configure GPIO
+    P6SEL1 &= ~(BIT0 | BIT1);
+    P6SEL0 |= (BIT0 | BIT1);                // USCI_A3 UART operation
+
+    // Disable the GPIO power-on default high-impedance mode to activate
+    // previously configured port settings
+    PM5CTL0 &= ~LOCKLPM5;
+
+    // Startup clock system with max DCO setting ~8MHz
+    CSCTL0_H = CSKEY_H;                     // Unlock CS registers
+    CSCTL1 = DCOFSEL_3 | DCORSEL;           // Set DCO to 8MHz
+    CSCTL2 = SELA__VLOCLK | SELS__DCOCLK | SELM__DCOCLK;
+    CSCTL3 = DIVA__1 | DIVS__1 | DIVM__1;   // Set all dividers
+    CSCTL0_H = 0;                           // Lock CS registers
+
+    EUSCI_A_UART_init( EUSCI_A3_BASE , &RFUartSettings);
+
+    EUSCI_A_UART_enable( EUSCI_A3_BASE );
+
+    EUSCI_A_UART_enableInterrupt( EUSCI_A3_BASE , EUSCI_A_UART_RECEIVE_INTERRUPT);
+
+    __bis_SR_register(LPM3_bits | GIE);     // Enter LPM3, interrupts enabled
+    __no_operation();
 
 
 }
 
-void initUART(void){
 
-
-
-
+#if defined(__TI_COMPILER_VERSION__) || defined(__IAR_SYSTEMS_ICC__)
+#pragma vector=EUSCI_A3_VECTOR
+__interrupt void USCI_A3_ISR(void)
+#elif defined(__GNUC__)
+void __attribute__ ((interrupt(EUSCI_A3_VECTOR))) USCI_A3_ISR (void)
+#else
+#error Compiler not supported!
+#endif
+{
+    switch(__even_in_range(UCA3IV, USCI_UART_UCTXCPTIFG))
+    {
+        case USCI_NONE: break;
+        case USCI_UART_UCRXIFG:
+            while(!(UCA3IFG&UCTXIFG));
+            UCA3TXBUF = UCA3RXBUF;
+            __no_operation();
+            break;
+        case USCI_UART_UCTXIFG: break;
+        case USCI_UART_UCSTTIFG: break;
+        case USCI_UART_UCTXCPTIFG: break;
+        default: break;
+    }
 }
-
-
-
-
-//Began writing without driverlib, decided to switch over
-/*
-void initUART(void){
-
-    //Enter Reset mode
-    UCA3CTLW1 = UCSWRST__ENABLE;
-
-    //UART Config: UART; ASYNCHRONOUS; No Parity; LSB first; 8-Bit word; One Stop Bit;
-    UCA3CTLW0 = UCMODE_0 | UCSYNC__ASYNC | UCPEN_0 | UCMSB_0 | UC7BIT__8BIT | UCSPB_0;
-
-    //Baudrate control:
-    CLKSpeed = ;
-    TGTBaud = 9600;
-    UCA3ABCTL = (CLKSpeed/TGTBaud);
-
-}*/
