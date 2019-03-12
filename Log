@@ -93,3 +93,12 @@ Wrestled with code composer and the driver libraries
 Next time:
 Configure UART
 Send and receive data via MSP430 UART
+
+3/12/2019
+Juan, Max
+CCS and driver configs
+Semi-successful uart communication with Putty (correct transmission 50% of the time)
+
+Next time:
+Iron out glitches
+Apply to Zigbee
