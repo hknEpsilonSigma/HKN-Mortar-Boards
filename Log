@@ -102,3 +102,13 @@ Semi-successful uart communication with Putty (correct transmission 50% of the t
 Next time:
 Iron out glitches
 Apply to Zigbee
+
+3/13/2019
+Juan, Richard
+Got UART working on MSP LPM3 not required, but global interrupts are required
+Able to configure and communicate with Xbee3s by sending messages over UART_MODE
+
+Next time:
+Create Xbee files
+Clean CODE
+communicate with radios by using MSPs 
