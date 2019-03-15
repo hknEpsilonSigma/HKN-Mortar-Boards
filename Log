@@ -112,3 +112,13 @@ Next time:
 Create Xbee files
 Clean CODE
 communicate with radios by using MSPs 
+
+3/15/2019
+Colin, Richard
+Attempted to further our understand TI's UART
+Started writing code in xbee.c
+Was unsuccessful in transmitting commands via MSP430 UART
+
+Next time:
+Transmit commands to the xbee using MSP430 UART
+Write more xbee.c code and clean up existing code
