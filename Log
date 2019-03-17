@@ -122,3 +122,15 @@ Was unsuccessful in transmitting commands via MSP430 UART
 Next time:
 Transmit commands to the xbee using MSP430 UART
 Write more xbee.c code and clean up existing code
+
+3/17/2019
+Everyone
+Increased delay, needed "write" command to save configuration to firmware when Xbee3 is unplugged
+Succesfully changed firmware settings and sent "Hello World!" from one radio to another via MCU
+
+Next time:
+Clean code!!!!
+Write receive functions -> check for "OK", read data bytes
+Defines macros like "enter command mode", "save settings", "change destination address high/low"
+Set up receive interrupts
+Figure out how to stop receiving data and start processing
