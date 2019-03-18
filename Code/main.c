@@ -4,8 +4,6 @@
 #include <xbee.h>
 
 
-
-
 static EUSCI_A_UART_initParam RFUartSettings = {
 
     //Set ACLK clocksource
@@ -65,19 +63,59 @@ int main(void)
 
     EUSCI_A_UART_enableInterrupt( EUSCI_A3_BASE , EUSCI_A_UART_RECEIVE_INTERRUPT);
 
+    __bis_SR_register(GIE);     // Enter LPM3, interrupts enabled
+    __no_operation();
 
     char *command = "Hello World!";
 
-    void xbee3_broadcast(command);
+
+    //while(1){
+        //EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'C');
+
+        /*EUSCI_A_UART_transmitData(EUSCI_A3_BASE, '+');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, '+');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, '+');
+
+        _delay_cycles(9000000);
+
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'A');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'T');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'D');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'H');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, ' ');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'B');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, '\r');
+
+        _delay_cycles(1000000);
+
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'A');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'T');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'W');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'R');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, '\r');
+
+        _delay_cycles(1000000);
+
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'A');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'T');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'C');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, 'N');
+        EUSCI_A_UART_transmitData(EUSCI_A3_BASE, '\r');*/
+
+        //EUSCI_A_UART_transmitData(EUSCI_A3_BASE, '+');
 
 
-    __bis_SR_register(LPM3_bits | GIE);     // Enter LPM3, interrupts enabled
-    __no_operation();
+        xbee3_broadcast(command);
+        //_delay_cycles(15000000);
+    //}
+
+    while(1);
+
 
 
 }
 
-#pragma vector=EUSCI_A3_VECTOR
+/*#pragma vector=EUSCI_A3_VECTOR
 __interrupt void USCI_A3_ISR(void)
 {
     switch(__even_in_range(UCA3IV, USCI_UART_UCTXCPTIFG))
@@ -85,10 +123,27 @@ __interrupt void USCI_A3_ISR(void)
         case USCI_NONE: break;
         case USCI_UART_UCRXIFG:
             while(!(UCA3IFG&UCTXIFG));
-            UCA3TXBUF = UCA3RXBUF;
+            //UCA3TXBUF = UCA3RXBUF;
             __no_operation();
             break;
         case USCI_UART_UCTXIFG: break;
+        case USCI_UART_UCSTTIFG: break;
+        case USCI_UART_UCTXCPTIFG: break;
+        default: break;
+    }
+}*/
+
+#pragma vector=EUSCI_A3_VECTOR
+__interrupt void USCI_A3_ISR(void)
+{
+    switch(__even_in_range(UCA3IV, USCI_UART_UCTXCPTIFG))
+    {
+        case USCI_NONE: break;
+        case USCI_UART_UCRXIFG: break;
+        case USCI_UART_UCTXIFG:
+            while(!(UCA3IFG & UCTXIFG));
+            _no_operation();
+            break;
         case USCI_UART_UCSTTIFG: break;
         case USCI_UART_UCTXCPTIFG: break;
         default: break;
