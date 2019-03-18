@@ -134,3 +134,13 @@ Write receive functions -> check for "OK", read data bytes
 Defines macros like "enter command mode", "save settings", "change destination address high/low"
 Set up receive interrupts
 Figure out how to stop receiving data and start processing
+
+3/18/2019
+Colin, Max
+Cleaned up code: wrote uart, xBee, and boardInit .h/.c files; In main, simply call board_init() to abstract init functions away
+Wrote OK receive function, and string receive function
+Discussed LEDs
+
+Next Time:
+Additional code clean up and add extra functions, including getRSSI()
+Discuss together after independent LED research
