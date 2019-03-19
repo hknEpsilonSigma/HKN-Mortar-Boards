@@ -1,87 +1,93 @@
-#include <msp430.h>
-#include <eusci_a_uart.h>
-#include <xbee.h>
+/*
+ * XBee.c
+ *
+ *  Created on: Mar 18, 2019
+ *      Author: Catalyst
+ */
 
-void xbee3_initialize()
+#include "HKNHats.h"
+
+char OK_message[3];
+char received_string[10]; // Not size to make
+
+/*
+ * initialize xBee settings locally through uart
+ */
+void xBee3_init() 
 {
+    char *pointer = "+++";
+    uart_xBee_transmit(pointer);
+    _delay_cycles(9000000);
 
+    char *destination_address_high = "ATDH 0\r";
+    uart_xBee_transmit(destination_address_high);
+    _delay_cycles(1000000);
+
+    char *destination_address_low = "ATDL FFFF\r";
+    uart_xBee_transmit(destination_address_low);
+    _delay_cycles(1000000);
+
+    char *save_settings = "ATWR\r";
+    uart_xBee_transmit(save_settings);
+    _delay_cycles(1000000);
+
+    char *command_null = "ATCN\r";
+    uart_xBee_transmit(command_null);
+    _delay_cycles(1000000);
 }
 
-char receive_message[3];
-
-void xbee3_uart_transmit(char *message)
+/*
+ * transmit a message from uC to xBee through uart
+ */
+void uart_xBee3_transmit(char *message) 
 {
-    while(*message != 0)
+    while(*message != 0) 
     {
         EUSCI_A_UART_transmitData(EUSCI_A3_BASE, *message);
-        //while(!UCTXCPTIFG);
-
         message++;
     }
 }
 
-
-void xbee3_broadcast(char *message)
+/*
+ * transmit a message through radio waves to other Xbees
+ */
+void xBee3_radio_transmit(char *message) 
 {
-    char *pointer = ENTER_AT_COMMAND_MODE;
-    xbee3_uart_transmit(pointer);
-    _delay_cycles(9000000);
-
-    char *destination_address_high = "ATDH 0\r";
-
-    xbee3_uart_transmit(destination_address_high);
-
-    _delay_cycles(1000000);
-
-    char *destination_address_low = "ATDL FFFF\r";
-
-    xbee3_uart_transmit(destination_address_low);
-
-    _delay_cycles(1000000);
-
-    char *save_settings = "ATWR\r";
-
-    xbee3_uart_transmit(save_settings);
-
-    _delay_cycles(1000000);
-
-
-    char *command_null = "ATCN\r";
-
-    xbee3_uart_transmit(command_null);
-
-    _delay_cycles(1000000);
-
-    xbee3_uart_transmit(message);
-
-
+    uart_xBee_transmit(message);
 }
 
-
-void xbee3_uart_receive_string(char *receive_message)
+/*
+ * Receive a string from UART
+ */
+void xBee3_uart_receive_string(void)
 {
-
     uint8_t data;
     uint8_t i = 0;
-    while(data != 0){
+    while(data != 0)
+    {
         data = EUSCI_A_UART_receiveData(EUSCI_A3_BASE);
-        receive_message[i++] = data;
+        received_string[i++] = data;
     }
 }
 
-        //set Network ID
-        /*
-         *
-         */
+/*
+ * Receive an "OK" string from UART
+ */
+int xBee3_uart_receive_OK(void)
+{
+    char *OK_string = "\rOK";
 
-        //set Channel
+    OK_message[0] = EUSCI_A_UART_receiveData(EUSCI_A3_BASE);
+    OK_message[1] = EUSCI_A_UART_receiveData(EUSCI_A3_BASE);
+    OK_message[2] = EUSCI_A_UART_receiveData(EUSCI_A3_BASE);
 
-        //read Serial High
-        //read Serial Low
-
-        //write Node Identifier **Optional**
-
-        //Device Role
-
-
+    for(uint8_t i = 0;i < 3;i++)
+    {
+        if(OK_message[i] != OK_string[i])
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
 

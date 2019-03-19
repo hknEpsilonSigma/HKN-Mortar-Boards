@@ -1,20 +1,38 @@
+/*
+ * XBee.h
+ *
+ *  Created on: Mar 18, 2019
+ *      Author: Catalyst
+ */
 
+#ifndef XBEE_H_
+#define XBEE_H_
 
-#ifndef XBEE3_H_
-#define XBEE3_H_
+#include "HKNHats.h"
 
-#include <msp430.h>
-#include <eusci_a_uart.h>
+/*
+ * initialize xBee settings locally through uart
+ */
+void xBee3_init(void);
 
-#define ENTER_AT_COMMAND_MODE "+++"
+/*
+ * transmit a message from uC to xBee through uart
+ */
+void uart_xBee3_transmit(char *message);
 
-void xbee3_initialize();
+/*
+ * transmit a message through radio waves to other Xbees
+ */
+void xBee3_radio_transmit(char *message);
 
-void xbee3_broadcast(char *);
+/*
+ * Receive a string from UART
+ */
+void xBee3_uart_receive_string(void);
 
-void xbee3_uart_receive_string(char *);
+/*
+ * Receive an "OK" string from UART
+ */
+int xBee3_uart_receive_OK(void);
 
-void xbee3_uart_transmit(char *);
-
-
-#endif /* XBEE3_H_ */
+#endif /* XBEE_H_ */
