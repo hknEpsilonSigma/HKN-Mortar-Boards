@@ -1,48 +1,107 @@
-2/15/19
-Colin, Richard
-Setup Git repository
-Installed CCS and XCTU
-Connected to XBee3 via UART
 
-Next time:
-Install CCS and XCTU
-Setup Git and create branches
-Configure radios to communicate
+3/20/2019
+Richard, Juan
+Re-organized Git-hub protocol and consolidated drivers for consistency. Started change_destination_address function but requires
+debugging.
 
+Next Time:
+Resolve change_destination_address function. Work on AT write function to store commands(ATWR). We're not sure 
+what uart_xBee3_radio_transmit does. uart_xBee3_send_command_only funciton does not handle parameters.
+xBee3_uart_receive_OK function and xBee3_uart_receive_string have some redundencies, one should call the other.
 
-2/18/19
+3/19/2019
+Juan, Max
+Wrote additional functions including layers of complexity for command functions and inits
+
+Next Time:
+Write radio receieve functions, Write RSSI functions, and overall main program to run on boards
+
+3/18/2019
 Colin, Max
-Max setup Github and is waiting to join
-Max installed XCTU
-Max talked to COlin about the math behind the mesh network
-Were able to get two radios to run a sucessful distance check!!! (see video for settings)
+Cleaned up code: wrote uart, xBee, and boardInit .h/.c files; In main, simply call board_init() to abstract init functions away
+Wrote OK receive function, and string receive function
+Discussed LEDs
 
 Next Time:
-Try to make the radios communicate with each other using UART
-Max can bring his XMEGA from uP to test UART on radios (more familiar than MSP430 for now)
-Get Juan to setup Github and install XCTU
+Additional code clean up and add extra functions, including getRSSI()
+Discuss together after independent LED research
 
-
-2/19/19
-Max, Juan
-Max talked to Juan about project overview
-Max looked into RF module configuration
-We need to determine necessary initialization for UART communication
-Juan researched power approximate power consumption and battery requirements.
-
-Next Time:
-Build breadboard for RF
-Find necessary configurations
-
-2/20/19
-Juan, Richard
-Acquired breadboards, wire kit
-Wired breadboards
-Explored XCTU
+3/17/2019
+Everyone
+Increased delay, needed "write" command to save configuration to firmware when Xbee3 is unplugged
+Succesfully changed firmware settings and sent "Hello World!" from one radio to another via MCU
 
 Next time:
-Inventory all hardware
-Configure a mesh network
+Clean code!!!!
+Write receive functions -> check for "OK", read data bytes
+Defines macros like "enter command mode", "save settings", "change destination address high/low"
+Set up receive interrupts
+Figure out how to stop receiving data and start processing
+
+3/15/2019
+Colin, Richard
+Attempted to further our understand TI's UART
+Started writing code in xbee.c
+Was unsuccessful in transmitting commands via MSP430 UART
+
+Next time:
+Transmit commands to the xbee using MSP430 UART
+Write more xbee.c code and clean up existing code
+
+3/13/2019
+Juan, Richard
+Got UART working on MSP LPM3 not required, but global interrupts are required
+Able to configure and communicate with Xbee3s by sending messages over UART_MODE
+
+Next time:
+Create Xbee files
+Clean CODE
+communicate with radios by using MSPs 
+
+3/12/2019
+Juan, Max
+CCS and driver configs
+Semi-successful uart communication with Putty (correct transmission 50% of the time)
+
+Next time:
+Iron out glitches
+Apply to Zigbee
+
+3/11/2019
+Colin, Max
+Attempted to setup UART on MSP430
+Wrestled with code composer and the driver libraries
+
+Next time:
+Configure UART
+Send and receive data via MSP430 UART
+
+2/27/2019
+Juan, Richard
+Unsuccessfully attempted to configure USART Rx interrupt on the MSP430.
+Corrected some MSP430 documentation on github.
+
+Next time:
+Double check MSP430 configuration. Get interrupt working.
+Start communicating MSP430 with RF module.
+
+2/26/2019
+Max, Juan
+Max unsuccessfully attempted to have two Zigbees communicate with each other over uart through a microcontroller
+Juan researched how to configure uart on the MSP 430
+
+Next time:
+Configure zigbee uart
+Finish MSP430 uart config
+
+2/25/2019
+Colin, Max
+Learned the command language and how to configure the Xbee via the terminal
+Can use this to configure and write commands with UART on the micro controller
+
+Next time:
+Configure UART on the MSP430
+Attempt to use UART to communicate with the Xbee
 
 2/22/2019
 Colin, Richard
@@ -58,96 +117,50 @@ Figure out how to send packets without using the computer
 Maybe figure out the Mircopython?
 Attempt to connect a 3rd radio
 
-2/25/2019
-Colin, Max
-Learned the command language and how to configure the Xbee via the terminal
-Can use this to configure and write commands with UART on the micro controller
+2/20/19
+Juan, Richard
+Acquired breadboards, wire kit
+Wired breadboards
+Explored XCTU
 
 Next time:
-Configure UART on the MSP430
-Attempt to use UART to communicate with the Xbee
+Inventory all hardware
+Configure a mesh network
 
-2/26/2019
+
+2/19/19
 Max, Juan
-Max unsuccessfully attempted to have two Zigbees communicate with each other over uart through a microcontroller
-Juan researched how to configure uart on the MSP 430
+Max talked to Juan about project overview
+Max looked into RF module configuration
+We need to determine necessary initialization for UART communication
+Juan researched power approximate power consumption and battery requirements.
 
-Next time:
-Configure zigbee uart
-Finish MSP430 uart config
+Next Time:
+Build breadboard for RF
+Find necessary configurations
 
-2/27/2019
-Juan, Richard
-Unsuccessfully attempted to configure USART Rx interrupt on the MSP430.
-Corrected some MSP430 documentation on github.
 
-Next time:
-Double check MSP430 configuration. Get interrupt working.
-Start communicating MSP430 with RF module.
-
-3/11/2019
+2/18/19
 Colin, Max
-Attempted to setup UART on MSP430
-Wrestled with code composer and the driver libraries
+Max setup Github and is waiting to join
+Max installed XCTU
+Max talked to COlin about the math behind the mesh network
+Were able to get two radios to run a sucessful distance check!!! (see video for settings)
 
-Next time:
-Configure UART
-Send and receive data via MSP430 UART
+Next Time:
+Try to make the radios communicate with each other using UART
+Max can bring his XMEGA from uP to test UART on radios (more familiar than MSP430 for now)
+Get Juan to setup Github and install XCTU
 
-3/12/2019
-Juan, Max
-CCS and driver configs
-Semi-successful uart communication with Putty (correct transmission 50% of the time)
 
-Next time:
-Iron out glitches
-Apply to Zigbee
-
-3/13/2019
-Juan, Richard
-Got UART working on MSP LPM3 not required, but global interrupts are required
-Able to configure and communicate with Xbee3s by sending messages over UART_MODE
-
-Next time:
-Create Xbee files
-Clean CODE
-communicate with radios by using MSPs 
-
-3/15/2019
+2/15/19
 Colin, Richard
-Attempted to further our understand TI's UART
-Started writing code in xbee.c
-Was unsuccessful in transmitting commands via MSP430 UART
+Setup Git repository
+Installed CCS and XCTU
+Connected to XBee3 via UART
 
 Next time:
-Transmit commands to the xbee using MSP430 UART
-Write more xbee.c code and clean up existing code
+Install CCS and XCTU
+Setup Git and create branches
+Configure radios to communicate
 
-3/17/2019
-Everyone
-Increased delay, needed "write" command to save configuration to firmware when Xbee3 is unplugged
-Succesfully changed firmware settings and sent "Hello World!" from one radio to another via MCU
-
-Next time:
-Clean code!!!!
-Write receive functions -> check for "OK", read data bytes
-Defines macros like "enter command mode", "save settings", "change destination address high/low"
-Set up receive interrupts
-Figure out how to stop receiving data and start processing
-
-3/18/2019
-Colin, Max
-Cleaned up code: wrote uart, xBee, and boardInit .h/.c files; In main, simply call board_init() to abstract init functions away
-Wrote OK receive function, and string receive function
-Discussed LEDs
-
-Next Time:
-Additional code clean up and add extra functions, including getRSSI()
-Discuss together after independent LED research
-
-3/19/2019
-Juan, Max
-Wrote additional functions including layers of complexity for command functions and inits
-
-Next Time:
-Write radio receieve functions, Write RSSI functions, and overall main program to run on boards
