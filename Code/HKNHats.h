@@ -1,9 +1,6 @@
 /*
  * HKNHats.h
  *
- *  Created on: Mar 18, 2019
- *      Author: Catalyst
- *
  *  Include this file in all .c files to eliminate additional headers
  */
 
@@ -15,6 +12,6 @@
 #include <eusci_a_uart.h>
 #include "uart.h"
 #include "Board_Init.h"
-#include "XBee.h"
+#include "xbee3.h"
 
 #endif /* HKNHATS_H_ */
