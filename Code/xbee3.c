@@ -1,59 +1,83 @@
 /*
- * XBee.c
+ * xBee3.c
  *
- *  Created on: Mar 18, 2019
- *      Author: Catalyst
  */
 
 #include "HKNHats.h"
 
-char OK_message[3];
-char received_string[10]; // Not size to make
+char received_string[10];
 
-/*
- * initialize xBee settings locally through uart
- */
-void xBee3_init() 
-{
-    char *pointer = "+++";
-    uart_xBee_transmit(pointer);
-    _delay_cycles(9000000);
-
-    char *destination_address_high = "ATDH 0\r";
-    uart_xBee_transmit(destination_address_high);
-    _delay_cycles(1000000);
-
-    char *destination_address_low = "ATDL FFFF\r";
-    uart_xBee_transmit(destination_address_low);
-    _delay_cycles(1000000);
-
-    char *save_settings = "ATWR\r";
-    uart_xBee_transmit(save_settings);
-    _delay_cycles(1000000);
-
-    char *command_null = "ATCN\r";
-    uart_xBee_transmit(command_null);
-    _delay_cycles(1000000);
-}
+/***********************************************************Level 1 Functions ******************************************************/
 
 /*
  * transmit a message from uC to xBee through uart
  */
-void uart_xBee3_transmit(char *message) 
-{
-    while(*message != 0) 
-    {
+void uart_xBee3_transmit(char *message) {
+    while(*message != 0) {
         EUSCI_A_UART_transmitData(EUSCI_A3_BASE, *message);
         message++;
     }
 }
 
 /*
- * transmit a message through radio waves to other Xbees
+ * Receive an "OK" string from UART
+ * Return 0 if fail, return 1 if succeed
  */
-void xBee3_radio_transmit(char *message) 
-{
-    uart_xBee_transmit(message);
+int xBee3_uart_receive_OK(void) {
+    //compare received string with "OK\r"
+    char *OK_string = "OK\r";
+
+    //if any char comparisons fail, return 0
+    for (uint8_t i = 0; i < 3; i++) {
+        if (EUSCI_A_UART_receiveData(EUSCI_A3_BASE) != OK_string[i])
+            return 0;
+    }
+
+    //if success, return 1
+    return 1;
+}
+
+/***********************************************************Level 2 Functions ******************************************************/
+
+/*
+ * Enter command mode, return 1 if success and 0 otherwise
+ */
+int uart_xBee3_enter_command_mode() {
+    char *pointer = "+++";
+    uart_xBee_transmit(pointer);
+
+    if(!xBee3_uart_receive_OK())
+            return 0;
+
+    _delay_cycles(9000000);
+    return 1;
+}
+
+/*
+ * Exit command mode, return 1 if success and 0 otherwise
+ */
+int uart_xBee3_exit_command_mode() {
+    char *pointer = "ATCN";
+    uart_xBee3_transmit(pointer);
+
+    if(!xBee3_uart_receive_OK())
+        return 0;
+
+    _delay_cycles(1000000);
+    return 1;
+}
+
+/*
+ * Send command only, return 1 if success and 0 otherwise
+ */
+int uart_xBee3_send_command_only(char *pointer) {
+    uart_xBee_transmit(pointer);
+
+    if(!xBee3_uart_receive_OK())
+        return 0;
+
+    _delay_cycles(1000000);
+    return 1;
 }
 
 /*
@@ -70,24 +94,50 @@ void xBee3_uart_receive_string(void)
     }
 }
 
+/***********************************************************Level 3 Functions ******************************************************/
+
+
 /*
- * Receive an "OK" string from UART
+ * initialize xBee settings locally through uart
  */
-int xBee3_uart_receive_OK(void)
-{
-    char *OK_string = "\rOK";
+int xBee3_init() {
+    if (!uart_xBee3_enter_command_mode())
+        return 0;
 
-    OK_message[0] = EUSCI_A_UART_receiveData(EUSCI_A3_BASE);
-    OK_message[1] = EUSCI_A_UART_receiveData(EUSCI_A3_BASE);
-    OK_message[2] = EUSCI_A_UART_receiveData(EUSCI_A3_BASE);
+    if (!uart_xBee3_send_command_only("ATDH 0\r"))
+        return 0;
 
-    for(uint8_t i = 0;i < 3;i++)
-    {
-        if(OK_message[i] != OK_string[i])
-        {
-            return 0;
-        }
-    }
+    if (!uart_xBee3_send_command_only("ATDL FFFF\r"))
+        return 0;
+
+    if (!uart_xBee3_send_command_only("ATWR\r"))
+        return 0;
+
+    if (!uart_xBee3_exit_command_mode())
+        return 0;
+
     return 1;
 }
 
+/*
+ * Send a single whole command with enter and exit
+ */
+int uart_xBee3_send_command(char *pointer) {
+    if (!uart_xBee3_enter_command_mode())
+        return 0;
+
+    if (!uart_xBee3_send_command_only(pointer))
+        return 0;
+
+    if (!uart_xBee3_exit_command_mode())
+        return 0;
+
+    return 1;
+}
+
+/*
+ * transmit a message through radio waves to other Xbees
+ */
+void xBee3_radio_transmit(char *message) {
+    uart_xBee3_transmit(message);
+}

@@ -14,6 +14,6 @@
  * Only function that will be called by main,
  * which holds all board initializations, including uart, Zigbee, ...
  */
-void boardInit(void);
+int boardInit(void);
 
 #endif /* BOARD_INIT_H_ */

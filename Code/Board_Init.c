@@ -11,10 +11,10 @@
  * Only function that will be called by main,
  * which holds all board initializations, including uart, Xbee, ...
  */
-void boardInit() {
+int boardInit() {
     //initialize uart
     uartInit();
 
     //initialize ZigBee
-    xBee_init();
+    return xBee3_init();
 }

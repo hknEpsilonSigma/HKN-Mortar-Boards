@@ -1,8 +1,6 @@
 /*
  * uart.c
  *
- *  Created on: Mar 18, 2019
- *      Author: Catalyst
  */
 
 #include "HKNHats.h"
@@ -34,4 +32,21 @@ void uartInit() {
 
     __bis_SR_register(GIE);     // Enter LPM3, interrupts enabled
     __no_operation();
+}
+
+#pragma vector=EUSCI_A3_VECTOR
+__interrupt void USCI_A3_ISR(void)
+{
+    switch(__even_in_range(UCA3IV, USCI_UART_UCTXCPTIFG))
+    {
+        case USCI_NONE: break;
+        case USCI_UART_UCRXIFG: break;
+        case USCI_UART_UCTXIFG:
+            while(!(UCA3IFG & UCTXIFG));
+            _no_operation();
+            break;
+        case USCI_UART_UCSTTIFG: break;
+        case USCI_UART_UCTXCPTIFG: break;
+        default: break;
+    }
 }
