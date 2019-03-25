@@ -4,6 +4,7 @@ Discussed LED power consumption as well as hardware to implement decoding
 Began code to implement LED logic
 
 Next Time:
+Examine luminosities of various LEDs
 Finish up code and test hardware
 RSSI function
 
