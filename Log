@@ -1,3 +1,11 @@
+3/26/19
+Max, Juan
+Wrote functions that compute distance from RSSI values, and computes x and y coordinate in relation to basis nodes (Max: Node.c)
+Wrote function to get RSSI value from XBee, tested unsuccessfully 
+
+Next Time:
+Testing functions and adding more code to the main system that will be run
+
 3/25/19
 Max, Colin
 Discussed LED power consumption as well as hardware to implement decoding
