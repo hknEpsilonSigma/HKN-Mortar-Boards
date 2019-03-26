@@ -5,7 +5,7 @@
 
 int main(void)
 {
-  
+
     boardInit();
     xBee3_change_destination_address("4444", "EEEE");
     char *command = "Hello World!";
@@ -29,3 +29,5 @@ __interrupt void USCI_A3_ISR(void)
         default: break;
     }
 }
+
+
