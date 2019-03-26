@@ -55,5 +55,21 @@ int uart_xBee3_send_command(char *pointer);
  */
 void xBee_radio_transmit(char *message);
 
+/*
+ * get RSSI (not written)
+ */
+uint16_t xBee_get_RSSI();
+
+//other necessary functions:
+//get RSSI to compute distance
+//Set destination address
+//and then write code for LEDs, which will involve:
+    //CPLD to make 32 (or so) bit shift register
+    //an array that will hold which color each LED will have (GREEN, RED, etc)
+    //then a function that converts that color into a pwm duty cycle, using 3 rows (RGB) and 32 columns for each LED
+        //(say 10ms period) will just put a 5 there if 50% cycle, 7 if 70% cycle
+            //if msCount < that value, output a 1 that will later go through the shift register, 0 otherwise. And then clk when youre done
+            //and reset msCount
+
 
 #endif /* XBEE_H_ */
