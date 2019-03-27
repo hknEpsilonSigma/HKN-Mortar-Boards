@@ -1,0 +1,17 @@
+I.    All Routers: Inventory hats to determine "Anchors" Hats 0,1,2 and other hats.
+
+II.   Hat 0 Router, All other Hats are nodes: Hat 0 sends multiple packets to Hats > 0. Hats > 0 find average RSSI for D-0n
+
+III.  Hat 0 Communicates with Hat 1, Hat 1 becomes Router, Hat 0 verifies this and becomes node.
+
+IV.   Hat 1 Router, All other Hats are nodes: Hat 1 sends multiple packets to Hats > 1. Hats > 1 find average RSSI for D-1n
+
+V.    Hat 1 Communicates with Hat 2, Hat 2 becomes Router, Hat 1 verifies this and becomes node.
+
+VI.   Hat 2 Router, All other Hats are nodes: Hat 2 sends X-02 and Y-02 multiple packets to Hats > 2. Hats > 2 find average RSSI for D-2n.
+
+VII.  All hats calculate their X-0n and Y-0n.
+  
+VIII. All hats sequentially broadcast their X-0n and Y-0n.
+
+IX.   Calculate and Display on LEDs.
