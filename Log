@@ -1,3 +1,10 @@
+3/27/19
+Juan, Richard
+Discussed testing PCB development and Hat location process.
+
+Next Time:
+Clarify math. Add more code. Test RSSI function: Juan Branch xbee3.c and xbee3.h
+
 3/26/19
 Max, Juan
 Wrote functions that compute distance from RSSI values, and computes x and y coordinate in relation to basis nodes (Max: Node.c)
