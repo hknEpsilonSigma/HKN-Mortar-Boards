@@ -1,3 +1,13 @@
+3/29/19
+Just Colin :(
+Worked on LED code
+Tried to work on algorithms to properly output PWM data to LEDs using shift registers
+Eventually realized that LED drivers would be the better option
+
+Next time:
+Research LED drivers to use
+Work on LED code to work with drivers
+
 3/27/19
 Juan, Richard
 Discussed testing PCB development and Hat location process.
