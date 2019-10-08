@@ -10,6 +10,17 @@
 
 #include "HKNHats.h"
 
+#define LIFO_BUFFER_SIZE 256
+
+typedef struct
+{
+    char lifoBuffer[LIFO_BUFFER_SIZE];
+    int8_t indexPointer;
+} uartReceiveLifoBuffer_t;
+
+/*************************************************** Global Variable Declarations ************************************************* */
+uartReceiveLifoBuffer_t uartReceiveLifoBuffer;
+
 /*************************************************** Function Declarations ******************************************************** */
 
 /*
@@ -55,5 +66,8 @@ static EUSCI_A_UART_initParam RFUartSettings = {
     EUSCI_A_UART_OVERSAMPLING_BAUDRATE_GENERATION
 
 };
+
+void writeToUartReceiveLifoBuffer(void);
+char readFromUartReceiveLifoBuffer(void);
 
 #endif /* UART_H_ */

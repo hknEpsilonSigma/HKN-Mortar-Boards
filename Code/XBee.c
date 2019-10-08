@@ -29,7 +29,7 @@ int xBee3_uart_receive_OK(void) {
 
     //if any char comparisons fail, return 0
     for (uint8_t i = 0; i < 3; i++) {
-        if (EUSCI_A_UART_receiveData(EUSCI_A3_BASE) != OK_string[i])
+        if (readFromUartReceiveLifoBuffer() != OK_string[i])
             return 0;
     }
 
@@ -46,7 +46,6 @@ int uart_xBee3_enter_command_mode() {
     char *pointer = "+++";
     uart_xBee_transmit(pointer);
     return xBee3_uart_receive_OK();
-    _delay_cycles(9000000);
 }
 
 /*
@@ -56,7 +55,6 @@ int uart_xBee3_exit_command_mode() {
     char *pointer = "ATCN";
     uart_xBee_transmit(pointer);
     return xBee3_uart_receive_OK();
-    _delay_cycles(1000000);
 }
 
 /*
@@ -65,7 +63,6 @@ int uart_xBee3_exit_command_mode() {
 int uart_xBee3_send_command_only(char *pointer) {
     uart_xBee_transmit(pointer);
     return xBee3_uart_receive_OK();
-    _delay_cycles(1000000);
 }
 
 /***********************************************************Level 3 Functions ******************************************************/

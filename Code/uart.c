@@ -8,6 +8,14 @@
 #include "HKNHats.h"
 
 /*
+ * Uart Macros
+ */
+#define indexBoundaryCheck    if(uartReceiveLifoBuffer.indexPointer > LIFO_BUFFER_SIZE) \
+        return; \
+    else if(uartReceiveLifoBuffer.indexPointer < 0) \
+        return; \
+
+/*
  * Initialize uart for ZigBee operation
  */
 void uartInit() {
@@ -34,4 +42,37 @@ void uartInit() {
 
     __bis_SR_register(GIE);     // Enter LPM3, interrupts enabled
     __no_operation();
+}
+
+#pragma vector=EUSCI_A3_VECTOR
+__interrupt void USCI_A3_ISR(void)
+{
+    switch(__even_in_range(UCA3IV, USCI_UART_UCTXCPTIFG))
+    {
+        case USCI_NONE: break;
+        case USCI_UART_UCRXIFG:
+            writeToUartReceiveLifoBuffer(); //Receive to LIFO buffer
+            break;
+        case USCI_UART_UCTXIFG:
+//            while(!(UCA3IFG & UCTXIFG));
+//            _no_operation();
+            break;
+        case USCI_UART_UCSTTIFG: break;
+        case USCI_UART_UCTXCPTIFG: break;
+        default: break;
+    }
+}
+
+void writeToUartReceiveLifoBuffer(void)
+{
+    indexBoundaryCheck;
+    uartReceiveLifoBuffer.lifoBuffer[uartReceiveLifoBuffer.indexPointer] = EUSCI_A_UART_receiveData(EUSCI_A3_BASE);
+    uartReceiveLifoBuffer.indexPointer++;
+}
+
+char readFromUartReceiveLifoBuffer(void)
+{
+    uartReceiveLifoBuffer.indexPointer--;
+    indexBoundaryCheck;
+    return uartReceiveLifoBuffer.lifoBuffer[uartReceiveLifoBuffer.indexPointer];
 }
